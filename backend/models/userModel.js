@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
-const userModel = mongoose.Schema(
+const userSchema = mongoose.Schema(
   {
     name: {
       type: String,
@@ -9,6 +10,7 @@ const userModel = mongoose.Schema(
     email: {
       type: String,
       requred: true,
+      unique: true,
     },
     password: {
       type: String,
@@ -16,15 +18,27 @@ const userModel = mongoose.Schema(
     },
     pic: {
       type: String,
-      requred: true,
       default:
         "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
     },
-
   },
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userModel);
+userSchema.methods.matchPassword = async function (enteredPasword) {
+  return await bcrypt.compare(enteredPasword, this.password);
+};
+
+// прежде чем сохранить user в BD зашифруй пароль
+userSchema.pre("save", async function (next) {
+  if (!this.isModified) {
+    next();
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;
