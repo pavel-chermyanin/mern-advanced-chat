@@ -11,16 +11,16 @@ import {
 } from "@chakra-ui/react";
 import Login from "../components/Authentication/Login";
 import SignUp from "../components/Authentication/SignUp";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userInfo"));
 
-    if (user) history.push("/chats");
-  }, [history]);
+    if (user) navigate("/chats");
+  }, [navigate]);
   return (
     <Container maxW="md" centerContent>
       <Box
