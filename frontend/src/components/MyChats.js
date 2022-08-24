@@ -11,7 +11,8 @@ const MyChats = ({ fetchAgain }) => {
   const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState();
   const [loggedUser, setLoggedUser] = useState();
   const toast = useToast();
-  const fecthChats = async () => {
+
+  const fetchChats = async () => {
     try {
       const config = {
         headers: {
@@ -34,8 +35,9 @@ const MyChats = ({ fetchAgain }) => {
 
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
-    fecthChats();
+    fetchChats();
   }, [fetchAgain]);
+  
   return (
     <Box
       display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
@@ -65,7 +67,7 @@ const MyChats = ({ fetchAgain }) => {
             fontSize={{ base: "17px", md: "10px" }}
             rightIcon={<AddIcon />}
           >
-            New Group Chat
+            New Chat
           </Button>
         </GroupChatModal>
       </Box>
